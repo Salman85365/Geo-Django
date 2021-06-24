@@ -6,12 +6,12 @@ from leaflet.admin import LeafletGeoAdmin
 # Register your models here.
 
 class IncidencesAdmin(LeafletGeoAdmin):
-	#pass
+	pass
 	list_display =('name','location')
 
 class CountiesAdmin(LeafletGeoAdmin):
 	#pass
-	list_display =('counties','codes')
+	list_display =('district','district_c')
 
 admin.site.register(Incidences, IncidencesAdmin)
 admin.site.register(Counties, CountiesAdmin)

@@ -79,10 +79,10 @@ WSGI_APPLICATION = 'agricom.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'agricom',
-        'USER': 'postgres',
+        'NAME': 'djangogeo',
+        'USER': 'salman',
         'HOST': 'localhost',
-        'PASSWORD': 'postgres',
+        'PASSWORD': 'gjmptw',
         'PORT': '5432',
     }
 }
@@ -112,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Africa/Nairobi'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 

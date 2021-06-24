@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 {% load static %}
 {% load leaflet_tags %}
@@ -7,7 +7,21 @@
 	{% leaflet_css %}
 	<title>Our Home</title>
 	<style type="text/css">
-		#gis {width: 100%;height:600px;}
+		#gis {width: 100%;height:600px;
+        }
+
+        .leaflet-control-layers-overlays {
+    font-size: 20px;
+}
+
+
+.leaflet-control-layers-base {
+    font-size: 20px;
+}
+
+form.leaflet-control-layers-list {
+    margin: 30px;
+}
 	</style>
 	<link rel="stylesheet" type="text/css" href="{% static 'routing/leaflet-routing-machine.css' %}">	
 	<link rel="stylesheet" type="text/css" href="{% static 'css/easy-button.css' %}">
@@ -20,7 +34,7 @@
 </head>
 <script type="text/javascript" src="{% static 'routing/leaflet-routing-machine.js' %}" ></script>
 <body>
-<h3>Am a hero. Am learning Geodjango </h3>
+<h3>Geo-Django from Analyticks</h3>
 <script type="text/javascript">
 $("#printBtn").click(function(){
   $('#map').print();
@@ -39,8 +53,8 @@ $("#printBtn").click(function(){
 		});
 		var datasets = new L.GeoJSON.AJAX("{% url 'county' %}",{
 			style: function colors(feature){
-				switch(feature.properties.counties){
-					case 'WAJIR':
+				switch(feature.properties.district){
+					case 'Rawalpindi':
 						return{
 							color: 'orange',
 							fillOpacity: 0.8
@@ -56,7 +70,55 @@ $("#printBtn").click(function(){
 				}
 			},
 			onEachFeature: function(feature,layer){
-				layer.bindPopup(feature.properties.counties.toString());
+                {#HitApi()#}
+				{#layer.bindPopup(feature.properties.district.toString());#}
+				layer.on('click', async function(e) {
+                    let city = e.sourceTarget.feature.properties.district.toString();
+                    let province = e.sourceTarget.feature.properties.province.toString();
+
+                    const key = "0f6a63ae-8d1a-49e6-a077-4147733db17b"
+                    let url = `http://api.airvisual.com/v2/city?city=${city}&state=${province}&country=Pakistan&key=${key}`
+
+                    var data2 = await fetch(url)
+                        .then(function (response) {
+                            return response.json()
+                        })
+                        .then(function (data) {
+
+                            return data.data.current
+                        })
+                        .catch(err => {
+                            return err
+                        })
+                    if (data2 == undefined) {
+                        layer.bindPopup("<div><h3>City Not supported</h3></div>")
+                    }
+                    else{
+                    layer.bindPopup(`
+                    <div>
+                        <h1>${city}</h1>
+                       <h3>WEATHER</h3>
+                        <ul style=" LIST-STYLE: NONE; font-size: 12px;  text-align: left;  margin-left: -37px; margin-top: 2px;">
+                            <li>Humidity % : ${data2.weather.hu}</li>
+                            <li>Weather Icon Code : ${data2.weather.ic}</li>
+                            <li>Atmosphere Pressure HPA : ${data2.weather.pr}</li>
+                            <li>Temprature Celsius : ${data2.weather.tp}</li>
+                            <li>Wind Direction Angle : ${data2.weather.wd}</li>
+                            <li>Wind Speed m/s : ${data2.weather.ws}</li>
+                        </ul>
+                        <h3>POLLUTION</h3>
+                        <ul style=" LIST-STYLE: NONE; font-size: 12px;  text-align: left;  margin-left: -37px; margin-top: 2px;">
+                            <li>AQI Value based on china : ${data2.pollution.aqicn}</li>
+                            <li>AQI Value based on china : ${data2.pollution.aqius}</li>
+
+                        </ul>
+
+                    </div>
+
+                    `)
+                }
+
+                })
 			}
 
 		});
@@ -91,39 +153,26 @@ $("#printBtn").click(function(){
 
 		var groupedOverlays = {
 		  "Layers": {
-		    "counties": datasets,
+		    "district": datasets,
 		    "incidences": points
 		  }
 
 		};
 
-		L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
-
-		var routing =  L.Routing.control({
-		  waypoints: [
-		    L.latLng(-0.23, 36.87),
-		    L.latLng(0.23, 37.64)
-		  ]
-		});
-
-		L.easyButton('fa-compass',
-		  function (){
-		    $('.leaflet-routing-container').is(':visible') ? routing.removeFrom(map) : routing.addTo(map)
-		  },
-		  'Routing'
-		).addTo(map);
+		L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);map.locate({setView: true, maxZoom: 6});
 
 
-		function createButton(label, container) {
-		    var btn = L.DomUtil.create('button', '', container);
-		    btn.setAttribute('type', 'button');
-		    btn.innerHTML = label;
-		    return btn;
-		}
+    }
 
-	}
+
 
 </script>
 {% leaflet_map "gis" callback="window.our_layers" %}
+
+<script>
+  $(document).ready(function(){
+     $('#gis').addClass('leaflet-control-layers-expanded');
+  });
+</script>
 </body>
 </html>

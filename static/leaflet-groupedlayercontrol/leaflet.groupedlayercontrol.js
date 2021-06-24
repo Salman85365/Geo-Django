@@ -121,7 +121,7 @@ L.Control.GroupedLayers = L.Control.extend({
     this._layers[id] = {
       layer: layer,
       name: name,
-      overlay: overlay
+
     };
 
     if (group) {
