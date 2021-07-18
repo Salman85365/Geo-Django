@@ -124,15 +124,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+# STATIC_URL = '/static/'
+#
+# STATICFILES_DIRS =(
+#     os.path.join(BASE_DIR,'static'),
+# )
+STATIC_ROOT = os.path.join(BASE_DIR,'/static/')
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS =(
-    os.path.join(BASE_DIR,'static'),
-)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'static')
+]
+# MEDIA FOLDER settings
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
+# Messages
 
 LEAFLET_CONFIG = {
-    'DEFAULT_CENTER': (-.023, 36.87),
-    'DEFAULT_ZOOM': 5,
+    'DEFAULT_CENTER': (30.37, 69.34),
+    'DEFAULT_ZOOM': 10,
     'MAX_ZOOM': 20,
     'MIN_ZOOM':3,
     'SCALE': 'both',

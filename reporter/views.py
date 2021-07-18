@@ -8,6 +8,20 @@ import requests
 class HomePageView(TemplateView):
 	template_name = 'index.html'
 
+class TempPageView(TemplateView):
+	template_name = 'temp.html'
+
+class MoisturePageView(TemplateView):
+	template_name = 'moisture.html'
+
+class aqi_usPageView(TemplateView):
+	template_name = 'aqi_us.html'
+
+class aqi_cnPageView(TemplateView):
+	template_name = 'aqi_cn.html'
+
+class IncidencesPageView(TemplateView):
+	template_name = 'Incidences.html'
 def county_datasets(request):
 	counties = serialize('geojson', Counties.objects.all())
 	return HttpResponse(counties,content_type='json')
